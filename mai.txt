@@ -32,7 +32,7 @@ String TileMap[H] = {
 	"                  BB              B     ",
 	"                  BB              B     ",
 	"                  BB              B     ",
-	"BBBBBBBBB    BBBBBBBBBBBBBBBBBBBBBBBBBBB",
+	"BBBBBBBBBB   BBBBBBBBBBBBBBBBBBBBBBBBBBB",
 	"                                  B     ",
 	"                                  B     ",
 	"                                  B     ",
