@@ -214,7 +214,7 @@ public:
 	Texture aimTexture;
 	Sprite aimSprite;
 	float aimMathX, aimMathY;
-	int iAim;
+	int iAimX, iAimY;
 
 
 	Player(Texture &image, float posX, float posY) : GameObj(image, posX, posY){  		
@@ -222,8 +222,8 @@ public:
 		aimSprite.setTexture(aimTexture);
 		aimSprite.setTextureRect(IntRect(0, 0, 100, 100));  //подрезаем картинку в нужный кадр*/
 		aimSprite.setScale(0.35, 0.35);  // Масштабирование прицела		
-		aimMathX = 60;
-		aimMathY = 60;
+	
+		
 		};
 	
 	virtual void update(){
@@ -232,23 +232,48 @@ public:
 		}		
 		GameObj::update();
 		/*Калибровка прицела*/
-		if (moveLeft == false){ aimSprite.setPosition(sprite.getPosition().x + aimMathX+70, sprite.getPosition().y + aimMathY); };
-		if (moveLeft == true){ aimSprite.setPosition(sprite.getPosition().x - aimMathX, sprite.getPosition().y + aimMathY); };
+		 
+		if (moveLeft == false){ aimSprite.setPosition(aimMathX, aimMathY); };
+		if (moveLeft == true) { aimSprite.setPosition(aimMathX, aimMathY); };
         };
 
 	void aimMath(char xy, bool increese) {
-		
-		if (iAim<101){
-			if ((xy == 'X') && (increese == 1)){
-				aimMathX = 0.5*cos(((iAim/100)*3.14f) / 2);
-				iAim++;
+
+		/**********************************************************
+		--> Прицел дёргается, как сумашедший. Надо как то уменьшить его скорость.
+		--> Прицел остаётся на месте. Не двигается вместе с персонажем.
+		Так же расчёт координат прицела нужно перенести в функцию Update(), 
+		а изменение коэфициента iAim оставить в aimMath(). Это поможет в будущем
+		без гемора реализовать перемещение прицела вместе с персонажем.
+		***********************************************************/
+	
+			aimMathX = sprite.getPosition().x + 60;
+			aimMathY = sprite.getPosition().y + 60;
+			if ((xy == 'X') && (increese == 1)){              // Aim - Left		
+				if (iAimX != 360) {
+					iAimX = (iAimX + 1)/10;
+					aimMathX = aimMathX - (100* cos(((iAimX)) / 2));
+				}
+				else iAimX = 0;
+				if (iAimY <= 360) {
+					iAimY = (iAimY + 1)/10;
+					aimMathY = aimMathY - (100* sin(((iAimY)) / 2));
+				}
+				else iAimY = 0;
 			};
-			if (xy == 'X' && (increese == 0)){
-				aimMathX = 0.5*cos(((iAim/100)*3.14f) / 2);
-				iAim--;
-			};
-		}
-		else iAim = 0;
+		/*	if ((xy == 'X') && (increese == 1)){              // Aim - Left		
+				if (iAimX >= 0) {
+					iAimX = iAimX - 1;
+					aimMathX = aimMathX - 100 * cos(((iAimX)) / 2);
+				}
+				else iAimX = 0;
+				if (iAimY != 360) {
+					iAimY = iAimY - 1;
+					aimMathY = aimMathY - 100 * sin(((iAimY)) / 2);
+				}
+				else iAimY = 0;
+			};*/
+	
 
 
 
